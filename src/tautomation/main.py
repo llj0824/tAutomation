@@ -1,26 +1,19 @@
 from __future__ import absolute_import, division, print_function
-import os
 import random
 import IPython.display as display
 import tensorflow as tf
 import pathlib
 import matplotlib.pyplot as plt
+from util import FileReader
 
-FACES_DIR = "/resources/dataset/Images/"
-PROJECT_ROOT = os.getcwd()
 IMAGE_SIZE = [300, 300]
 
 
 def main():
   AUTOTUNE = tf.data.experimental.AUTOTUNE
   tf.enable_eager_execution()
-  all_image_paths = getImageList(getDatasetDir())
-  demo(str(getRandomImagePath(all_image_paths)))
-
-
-
-def getDatasetDir():
-  return pathlib.Path(PROJECT_ROOT + FACES_DIR)
+  mapImageFileToRating = FileReader.getRatingsMap()
+  all_image_paths = getImageList(FileReader.getDatasetDir())
 
 
 def getImageList(dataSetDir):
@@ -40,14 +33,12 @@ def load_and_preprocess_image(path):
 def getRandomImagePath(all_image_paths):
   return all_image_paths[random.randint(1,len(all_image_paths))]
 
-def demo(img_path):
-  label = "Facial Attractiveness"
-
+def showImage(img_path):
   plt.imshow(load_and_preprocess_image(img_path))
   plt.grid(False)
   plt.title(label)
   plt.show()
-  print()
+
 
 
 if __name__ == "__main__":
