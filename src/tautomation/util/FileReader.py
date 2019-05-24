@@ -1,7 +1,8 @@
 import pandas
 import os
+import pathlib
 
-FACES_DIR = "/resources/dataset/Images/"
+FACES_DIR = "/resources/dataset/small_images_cf/"
 RATING_FILE = "/resources/dataset/All_labels.txt"
 PROJECT_ROOT = os.getcwd()
 
