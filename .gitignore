@@ -1,3 +1,6 @@
+#data files ignore
+**/resources/dataset/**
+
 # Temporary and binary files
 *~
 *.py[cod]
