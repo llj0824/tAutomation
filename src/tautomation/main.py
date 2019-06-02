@@ -3,8 +3,9 @@ import random
 import IPython.display as display
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from util import FileReader
+import numpy as np
 from tensor import tensorUtil
+from util import FileReader
 
 def main():
   AUTOTUNE = tf.data.experimental.AUTOTUNE
@@ -15,22 +16,28 @@ def main():
   all_images = getImageList(all_image_paths)
   all_image_ratings = getImageRatings(all_image_paths, mapImageToRating)
   tfModel = tensorUtil.initTensorFlow()
-  tensorUtil.trainModel(tfModel, all_images, all_image_ratings) #TODO: failing here. Due to image size
-  breakpoint()
+  tensorUtil.trainModel(tfModel, all_images, all_image_ratings) 
   # showImages(all_image_paths, mapImageToRating) 
 
 def getImageList(all_paths):
   all_images = []
   for path in all_paths:
-    all_images.append(tensorUtil.preprocess_image(str(path)))
-  return all_images
+    try:
+      all_images.append(tensorUtil.preprocess_image(str(path)))
+    except:
+      print("Could not process image: ", getImageFilename(path))
+  return np.asarray(all_images)
 
 def getImageRatings(allImagePaths, mapImageToRating):
   imageLabels = []
   for i in range(len(allImagePaths)):
     imageName = getImageFilename(allImagePaths[i])
-    imageLabels.append(round(float(mapImageToRating[imageName]),1))
-  return imageLabels
+    imageLabels.append(roundToNearestTenths(float(mapImageToRating[imageName])))
+  return np.asarray(imageLabels)
+
+def roundToNearestTenths(floatVal):
+   return round(floatVal,1)
+
 
 def getImagePaths(dataSetDir):
   all_paths = list(dataSetDir.iterdir())
